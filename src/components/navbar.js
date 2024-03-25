@@ -5,6 +5,7 @@ export const Navbar = () => {
     element: "nav",
     className: "bg-purple-800 p-3 flex gap-2 justify-between items-center",
     children: [
+      // menu and title
       El({
         element: "div",
         className: "ml-3 text-center flex justify-center gap-2",
@@ -20,6 +21,11 @@ export const Navbar = () => {
                 alt: "burger-menu",
               }),
             ],
+          }),
+          El({
+            element: "p",
+            className: "text-white text-lg",
+            children: ["My To-Do Tasks"],
           }),
         ],
       }),
