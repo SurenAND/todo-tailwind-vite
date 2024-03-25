@@ -71,6 +71,19 @@ export const Navbar = () => {
               }),
             ],
           }),
+          // add
+          El({
+            element: "button",
+            id: "add",
+            className: "cursor-pointer",
+            children: [
+              El({
+                element: "img",
+                src: "./src/assets/add.svg",
+                alt: "add",
+              }),
+            ],
+          }),
         ],
       }),
     ],
