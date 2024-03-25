@@ -46,6 +46,10 @@ export const MainSec = () => {
               }),
             ],
           }),
+          El({
+            element: "tbody",
+            id: "tbody",
+          }),
         ],
       }),
     ],
