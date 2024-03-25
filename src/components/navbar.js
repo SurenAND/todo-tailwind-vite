@@ -58,6 +58,19 @@ export const Navbar = () => {
               }),
             ],
           }),
+          // filter
+          El({
+            element: "button",
+            id: "filter",
+            className: "cursor-pointer",
+            children: [
+              El({
+                element: "img",
+                src: "./src/assets/filter.svg",
+                alt: "filter",
+              }),
+            ],
+          }),
         ],
       }),
     ],
