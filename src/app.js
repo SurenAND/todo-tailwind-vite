@@ -3,10 +3,11 @@ import { deletePopup } from "./components/deletepopup";
 import { MainSec } from "./components/mainSec";
 import { Navbar } from "./components/navbar";
 import { El } from "./components/shared/el";
+import { viewModal } from "./components/viewmodal";
 export const App = () => {
   return El({
     element: "div",
     className: "flex flex-col h-screen relative font-Poppins",
-    children: [Navbar(), MainSec(), addModal(), deletePopup()],
+    children: [Navbar(), MainSec(), addModal(), deletePopup(), viewModal()],
   });
 };
