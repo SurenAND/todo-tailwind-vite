@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "db": "json-server --watch db.json --p 5001"
+    "db": "json-server --watch db.json -p 5001"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
