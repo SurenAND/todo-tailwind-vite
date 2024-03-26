@@ -1,4 +1,4 @@
-import { addToData } from "./components";
+import { addToData, preFillInputs } from "./components";
 import { closeModal, openModal } from "./modalAction";
 
 // persian date picker
@@ -40,3 +40,55 @@ addForm.addEventListener("submit", (e) => {
 
   closeModal(modalBox);
 });
+
+//Edit the selected row
+let rowToEdit;
+function editRow(e, selectedRow = {}) {
+  if (editActive === false) {
+    e.preventDefault();
+    isEdit = true;
+
+    // get button id as index of the object that should edited
+    const idToEdit = +selectedRow.id;
+    toEdit = idToEdit;
+
+    // Fetch all tasks and find the task to be edited
+    fetchTasks().then((tasks) => {
+      const taskToEdit = tasks.find((task) => task.id === idToEdit);
+      preFillInputs(taskToEdit);
+      openModal(modalBox);
+    });
+  } else {
+    // Get updated data from the form inputs
+    const task = e.querySelector('input[name="task-name"]').value;
+    const priority = e.querySelector('input[name="priority"]:checked').value;
+    const status = e.querySelector('input[name="status"]:checked').value;
+    const deadline = e.querySelector('input[name="deadline"]').value;
+    const desc = e.querySelector('textarea[name="description"]').value;
+
+    // Fetch updated tasks, replace the specific task, and re-render the tasks
+    fetchTasks().then((tasks) => {
+      const taskToEdit = tasks.find((task) => task.id === toEdit);
+
+      // Create a new task object with the updated data
+      const newTask = {
+        ...taskToEdit,
+        taskName: task,
+        taskPriority: priority,
+        taskStatus: status,
+        taskDeadline: deadline,
+        taskDescription: desc,
+      };
+
+      console.log(newTask);
+      console.log(taskToEdit);
+      console.log(tasks);
+
+      editTaskApi(newTask).then(() => {
+        editActive = false;
+        closeModal(modalBox);
+        renderTasks();
+      });
+    });
+  }
+}
