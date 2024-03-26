@@ -1,3 +1,6 @@
+import { addTaskApi, fetchTasks } from "../library/axios";
+import { renderTasks } from "./main";
+
 export function clearInputs(form) {
   const inputs = form.querySelectorAll("input, textarea");
 

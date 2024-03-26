@@ -7,7 +7,7 @@ export function closeModal(item) {
   item.classList.add("invisible");
 }
 
-export function openModal(item) {
+export function openModal(item, isEdit = false) {
   if (isEdit === false) {
     clearInputs(addForm);
   }

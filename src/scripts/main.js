@@ -1,3 +1,4 @@
+import { deleteTaskApi, editTaskApi, fetchTasks } from "../library/axios";
 import {
   addToData,
   handlePriorityBg,
@@ -72,7 +73,7 @@ function editRow(e, selectedRow = {}) {
     fetchTasks().then((tasks) => {
       const taskToEdit = tasks.find((task) => task.id === idToEdit);
       preFillInputs(taskToEdit);
-      openModal(modalBox);
+      openModal(modalBox, isEdit);
     });
   } else {
     // Get updated data from the form inputs
@@ -190,7 +191,7 @@ function changeViewModal(data) {
   }
 }
 
-function renderTasks() {
+export function renderTasks() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
 
