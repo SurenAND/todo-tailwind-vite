@@ -109,6 +109,7 @@ function editRow(e, selectedRow = {}) {
   }
 }
 
+// delete row
 function confirmAndDelete(e, selectedRow) {
   e.preventDefault();
 
@@ -149,6 +150,44 @@ function confirmAndDelete(e, selectedRow) {
       deleteBtn.removeEventListener("click", handleDeleteClick);
     }
   });
+}
+
+// view selected row
+function viewRow(e, selectedRow) {
+  e.preventDefault();
+  const viewBox = document.getElementById("view-box");
+
+  // get button id as index of the object that should show
+  const idToShow = +selectedRow.id;
+
+  // Fetch all tasks and find the task to be viewed
+  fetchTasks().then((tasks) => {
+    const taskToView = tasks.find((task) => task.id === idToShow);
+    changeViewModal(taskToView);
+    openModal(viewBox);
+  });
+  // close add modal
+  viewBox.addEventListener("click", (e) => {
+    e.target.dataset.close ? closeModal(viewBox) : null;
+  });
+}
+
+function changeViewModal(data) {
+  const viewTaskName = document.getElementById("view-task-name");
+  const viewPriority = document.getElementById("view-priority");
+  const viewStatus = document.getElementById("view-status");
+  const viewDeadline = document.getElementById("view-deadline");
+  const viewDesc = document.getElementById("view-description");
+
+  viewTaskName.innerText = data.taskName;
+  viewPriority.innerText = data.taskPriority;
+  viewStatus.innerText = data.taskStatus;
+  viewDeadline.innerText = data.taskDeadline;
+  if (data.taskDescription) {
+    viewDesc.innerText = data.taskDescription;
+  } else {
+    viewDesc.innerText = "No Detail or Description";
+  }
 }
 
 function renderTasks() {
