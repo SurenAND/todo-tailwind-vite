@@ -9,6 +9,13 @@ let isEdit = false;
 let editActive = false;
 let toEdit;
 
+let tasksFromApi;
+fetchTasks().then((data) => {
+  tasks = data;
+  tasksFromApi = data;
+  renderTasks();
+});
+
 // addModal
 const addBtn = document.getElementById("add");
 const modalBox = document.getElementById("modal-box");
