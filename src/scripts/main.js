@@ -109,6 +109,48 @@ function editRow(e, selectedRow = {}) {
   }
 }
 
+function confirmAndDelete(e, selectedRow) {
+  e.preventDefault();
+
+  const deleteConfirmSec = document.getElementById("delete-section");
+  openModal(deleteConfirmSec);
+
+  const deleteBtn = document.getElementById("delete-content-delete");
+
+  // Remove the previous event listener from the delete button
+  deleteBtn.removeEventListener("click", handleDeleteClick);
+
+  // Add the new event listener to the delete button
+  deleteBtn.addEventListener("click", handleDeleteClick);
+
+  function handleDeleteClick() {
+    closeModal(deleteConfirmSec);
+    // remove the selected section
+    selectedRow.remove();
+
+    // get button id as index of the object that should removed
+    const idToDelete = +selectedRow.id;
+    deleteTaskApi(idToDelete).then(() => {
+      closeModal(deleteConfirmSec);
+      renderTasks();
+    });
+  }
+
+  // cancel button
+  const cancelBtn = document.getElementById("delete-content-cancel");
+  cancelBtn.addEventListener("click", () => {
+    closeModal(deleteConfirmSec);
+    deleteBtn.removeEventListener("click", handleDeleteClick);
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === deleteConfirmSec) {
+      closeModal(deleteConfirmSec);
+      deleteBtn.removeEventListener("click", handleDeleteClick);
+    }
+  });
+}
+
 function renderTasks() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
