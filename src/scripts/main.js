@@ -1,3 +1,4 @@
+import { addToData } from "./components";
 import { closeModal, openModal } from "./modalAction";
 
 // persian date picker
