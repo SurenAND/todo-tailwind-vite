@@ -204,7 +204,7 @@ function renderTasks() {
       deleteTask.classList.add("bg-red-600", "mx-1", "rounded", "text-center");
       deleteTask.id = `${task.id}`;
       const deleteIcon = document.createElement("img");
-      deleteIcon.src = "./assets/delete.svg";
+      deleteIcon.src = "./src/assets/delete.svg";
       deleteIcon.alt = "delete";
       deleteIcon.classList.add("w-5", "my-1", "mx-2");
       deleteTask.append(deleteIcon);
@@ -215,7 +215,7 @@ function renderTasks() {
       editTask.classList.add("bg-blue-600", "mx-1", "rounded", "text-center");
       editTask.id = `${task.id}`;
       const editIcon = document.createElement("img");
-      editIcon.src = "./assets/edit.svg";
+      editIcon.src = "./src/assets/edit.svg";
       editIcon.alt = "edit";
       editIcon.classList.add("w-5", "my-1", "mx-2");
       editTask.append(editIcon);
@@ -226,7 +226,7 @@ function renderTasks() {
       viewTask.classList.add("bg-gray-500", "mx-1", "rounded", "text-center");
       viewTask.id = `${task.id}`;
       const viewIcon = document.createElement("img");
-      viewIcon.src = "./assets/view.svg";
+      viewIcon.src = "./src/assets/view.svg";
       viewIcon.alt = "view";
       viewIcon.classList.add("w-5", "my-1", "mx-2");
       viewTask.append(viewIcon);
