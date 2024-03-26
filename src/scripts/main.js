@@ -1,4 +1,13 @@
-import { addToData, preFillInputs } from "./components";
+import {
+  addToData,
+  handlePriorityBg,
+  handlePriorityBorder,
+  handlePriorityText,
+  handleStatusBg,
+  handleStatusBorder,
+  handleStatusText,
+  preFillInputs,
+} from "./components";
 import { closeModal, openModal } from "./modalAction";
 
 // persian date picker
