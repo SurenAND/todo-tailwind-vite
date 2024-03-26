@@ -1,1 +1,2 @@
-console.log("im main");
+// persian date picker
+jalaliDatepicker.startWatch();
