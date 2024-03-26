@@ -1,6 +1,6 @@
 import { El } from "./shared/el";
 
-export const addModal = () => {
+export const AddModal = () => {
   return El({
     element: "div",
     className:

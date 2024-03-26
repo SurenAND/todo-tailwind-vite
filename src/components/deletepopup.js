@@ -1,6 +1,6 @@
 import { El } from "./shared/el";
 
-export const deletePopup = () => {
+export const DeletePopup = () => {
   return El({
     element: "section",
     className:
