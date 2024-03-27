@@ -1,10 +1,11 @@
-import { addModal } from "./components/addmodal";
-import { deletePopup } from "./components/deletepopup";
-import { filterModal } from "./components/filtermodal";
-import { MainSec } from "./components/mainSec";
-import { Navbar } from "./components/navbar";
+import { AddModal } from "./components/addmodal/addmodal";
+import { DeletePopup } from "./components/deletepopup/deletepopup";
+import { FilterModal } from "./components/filtermodal/filtermodal";
+import { MainSec } from "./components/mainSection/mainSec";
+import { Navbar } from "./components/navbar/navbar";
 import { El } from "./components/shared/el";
-import { viewModal } from "./components/viewmodal";
+import { ViewModal } from "./components/viewmodal/viewmodal";
+
 export const App = () => {
   return El({
     element: "div",
@@ -12,10 +13,10 @@ export const App = () => {
     children: [
       Navbar(),
       MainSec(),
-      addModal(),
-      filterModal(),
-      deletePopup(),
-      viewModal(),
+      AddModal(),
+      FilterModal(),
+      DeletePopup(),
+      ViewModal(),
     ],
   });
 };
