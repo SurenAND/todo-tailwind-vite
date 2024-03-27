@@ -14,16 +14,16 @@ import { closeModal, openModal } from "./modalAction";
 // persian date picker
 jalaliDatepicker.startWatch();
 
-let tasks = [];
+// let tasks = [];
 let isEdit = false;
 let editActive = false;
 let toEdit;
 
-let tasksFromApi;
+// let tasksFromApi;
 fetchTasks().then((data) => {
-  tasks = data;
-  tasksFromApi = data;
-  renderTasks();
+  // tasks = data;
+  // tasksFromApi = data;
+  renderTasks(data);
 });
 
 // addModal
@@ -101,10 +101,10 @@ function editRow(e, selectedRow = {}) {
       console.log(taskToEdit);
       console.log(tasks);
 
-      editTaskApi(newTask).then(() => {
+      editTaskApi(newTask).then((data) => {
         editActive = false;
         closeModal(modalBox);
-        renderTasks();
+        renderTasks(data);
       });
     });
   }
@@ -133,8 +133,11 @@ function confirmAndDelete(e, selectedRow) {
     // get button id as index of the object that should removed
     const idToDelete = +selectedRow.id;
     deleteTaskApi(idToDelete).then(() => {
-      closeModal(deleteConfirmSec);
-      renderTasks();
+      // Render tasks after adding the new task
+      fetchTasks().then((data) => {
+        closeModal(deleteConfirmSec);
+        renderTasks(data);
+      });
     });
   }
 
@@ -191,7 +194,7 @@ function changeViewModal(data) {
   }
 }
 
-export function renderTasks() {
+export function renderTasks(tasksFromApi) {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
 

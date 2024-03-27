@@ -32,7 +32,9 @@ export function addToData(target) {
   // Save the new task using the API
   addTaskApi(newTask).then(() => {
     // Render tasks after adding the new task
-    fetchTasks().then(renderTasks);
+    fetchTasks().then((data) => {
+      renderTasks(data);
+    });
   });
 }
 
