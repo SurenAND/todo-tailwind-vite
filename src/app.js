@@ -17,6 +17,10 @@ export const App = () => {
       FilterModal(),
       DeletePopup(),
       ViewModal(),
+      AddModal(),
+      FilterModal(),
+      DeletePopup(),
+      ViewModal(),
     ],
   });
 };
