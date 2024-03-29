@@ -20,20 +20,12 @@ export async function addTaskApi(task) {
 
 // Edit a task using the API
 export async function editTaskApi(task) {
-  try {
-    const response = await axios.put(`${BASE_URL}/tasks?id=${task.id}`, task, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`Error while editing the task: ${error.response.statusText}`);
-    return null;
-  }
+  const response = await axios.put(`${BASE_URL}/tasks/${task.id}`, task);
+  return response.data;
 }
 
 // Delete a task using the API
 export async function deleteTaskApi(taskId) {
-  await axios.delete(`${BASE_URL}/tasks?id=${taskId}`);
+  const response = await axios.delete(`${BASE_URL}/tasks/${taskId}`);
+  return response;
 }

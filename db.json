@@ -1,14 +1,6 @@
 {
   "tasks": [
     {
-      "id": 1711562139696,
-      "taskName": "1",
-      "taskPriority": "Medium",
-      "taskStatus": "Doing",
-      "taskDeadline": "1402/12/29",
-      "taskDescription": ""
-    },
-    {
       "id": 1711562230663,
       "taskName": "2",
       "taskPriority": "Low",
