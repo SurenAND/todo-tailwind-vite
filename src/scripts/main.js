@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import { deleteTaskApi, editTaskApi, fetchTasks } from "../library/axios";
 import {
   addToData,
@@ -14,16 +15,13 @@ import { closeModal, openModal } from "./modalAction";
 // persian date picker
 jalaliDatepicker.startWatch();
 
-// let tasks = [];
 let isEdit = false;
 let editActive = false;
 let toEdit;
+let currentPage = 1;
 
-// let tasksFromApi;
-fetchTasks().then((data) => {
-  // tasks = data;
-  // tasksFromApi = data;
-  renderTasks(data);
+fetchTasks().then((response) => {
+  renderTasks(response.data);
 });
 
 // addModal
@@ -70,7 +68,8 @@ function editRow(e, selectedRow = {}) {
     toEdit = idToEdit;
 
     // Fetch all tasks and find the task to be edited
-    fetchTasks().then((tasks) => {
+    fetchTasks().then((response) => {
+      const tasks = response.data;
       const taskToEdit = tasks.find((task) => task.id === idToEdit);
       preFillInputs(taskToEdit);
       openModal(modalBox, isEdit);
@@ -86,7 +85,8 @@ function editRow(e, selectedRow = {}) {
     const desc = e.target.querySelector('textarea[name="description"]').value;
 
     // Fetch updated tasks, replace the specific task, and re-render the tasks
-    fetchTasks().then((tasks) => {
+    fetchTasks().then((response) => {
+      const tasks = response.data;
       const taskToEdit = tasks.find((task) => task.id === toEdit);
 
       // Create a new task object with the updated data
@@ -100,10 +100,10 @@ function editRow(e, selectedRow = {}) {
       };
 
       editTaskApi(toEdit, newTask).then(() => {
-        fetchTasks().then((data) => {
+        fetchTasks().then((response) => {
           editActive = false;
           closeModal(modalBox);
-          renderTasks(data);
+          renderTasks(response.data);
         });
       });
     });
@@ -134,9 +134,9 @@ function confirmAndDelete(e, selectedRow) {
     const idToDelete = +selectedRow.id;
     deleteTaskApi(idToDelete).then(() => {
       // Render tasks after adding the new task
-      fetchTasks().then((data) => {
-        closeModal(deleteConfirmSec);
-        renderTasks(data);
+      closeModal(deleteConfirmSec);
+      fetchTasks().then((response) => {
+        renderTasks(response.data);
       });
     });
   }
@@ -165,7 +165,8 @@ function viewRow(e, selectedRow) {
   const idToShow = +selectedRow.id;
 
   // Fetch all tasks and find the task to be viewed
-  fetchTasks().then((tasks) => {
+  fetchTasks().then((response) => {
+    const tasks = response.data;
     const taskToView = tasks.find((task) => task.id === idToShow);
     changeViewModal(taskToView);
     openModal(viewBox);
@@ -199,7 +200,7 @@ export function renderTasks(tasksFromApi) {
   tbody.innerHTML = "";
 
   if (tasksFromApi) {
-    tasksFromApi.forEach((task) => {
+    tasksFromApi.map((task) => {
       const row = document.createElement("tr");
       row.id = `${task.id}`;
       row.classList.add("text-center", "border", "h-full", "w-full");
@@ -370,3 +371,13 @@ options.forEach((option) => {
     menu.classList.add("hidden");
   });
 });
+
+// search
+const searchInput = document.getElementById("search-input");
+searchInput.addEventListener("keyup", debounce(handleSearch, 1000));
+
+function handleSearch(e) {
+  fetchTasks(1, e.target.value).then((response) => {
+    renderTasks(response.data);
+  });
+}
