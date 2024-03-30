@@ -52,7 +52,7 @@ addForm.addEventListener("submit", (e) => {
   } else {
     isEdit = false;
     editActive = true;
-    editRow(e.target, toEdit);
+    editRow(e, toEdit);
   }
 
   closeModal(modalBox);
@@ -77,11 +77,13 @@ function editRow(e, selectedRow = {}) {
     });
   } else {
     // Get updated data from the form inputs
-    const task = e.querySelector('input[name="task-name"]').value;
-    const priority = e.querySelector('input[name="priority"]:checked').value;
-    const status = e.querySelector('input[name="status"]:checked').value;
-    const deadline = e.querySelector('input[name="deadline"]').value;
-    const desc = e.querySelector('textarea[name="description"]').value;
+    const task = e.target.querySelector('input[name="task-name"]').value;
+    const priority = e.target.querySelector(
+      'input[name="priority"]:checked'
+    ).value;
+    const status = e.target.querySelector('input[name="status"]:checked').value;
+    const deadline = e.target.querySelector('input[name="deadline"]').value;
+    const desc = e.target.querySelector('textarea[name="description"]').value;
 
     // Fetch updated tasks, replace the specific task, and re-render the tasks
     fetchTasks().then((tasks) => {
@@ -97,14 +99,12 @@ function editRow(e, selectedRow = {}) {
         taskDescription: desc,
       };
 
-      console.log(newTask);
-      console.log(taskToEdit);
-      console.log(tasks);
-
-      editTaskApi(newTask).then((data) => {
-        editActive = false;
-        closeModal(modalBox);
-        renderTasks(data);
+      editTaskApi(toEdit, newTask).then(() => {
+        fetchTasks().then((data) => {
+          editActive = false;
+          closeModal(modalBox);
+          renderTasks(data);
+        });
       });
     });
   }

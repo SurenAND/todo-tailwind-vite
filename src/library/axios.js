@@ -19,9 +19,9 @@ export async function addTaskApi(task) {
 }
 
 // Edit a task using the API
-export async function editTaskApi(task) {
-  const response = await axios.put(`${BASE_URL}/tasks/${task.id}`, task);
-  return response.data;
+export async function editTaskApi(taskId, task) {
+  const response = await axios.put(`${BASE_URL}/tasks/${taskId}`, task);
+  return response;
 }
 
 // Delete a task using the API
