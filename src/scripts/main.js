@@ -199,10 +199,12 @@ function changeViewModal(data) {
 }
 
 export function renderTasks(tasksFromApi) {
+  const notFound = document.getElementById("notFound");
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
 
-  if (tasksFromApi) {
+  if (tasksFromApi.length > 0) {
+    notFound.classList.add("hidden");
     tasksFromApi.map((task) => {
       const row = document.createElement("tr");
       row.id = `${task.id}`;
@@ -343,6 +345,8 @@ export function renderTasks(tasksFromApi) {
         viewRow(e, row);
       });
     });
+  } else {
+    notFound.classList.remove("hidden");
   }
 }
 
