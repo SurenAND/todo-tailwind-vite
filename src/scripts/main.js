@@ -18,8 +18,9 @@ jalaliDatepicker.startWatch();
 let isEdit = false;
 let editActive = false;
 let toEdit;
-let currentPage = 1;
-
+let page = 1;
+let perPage = 5;
+let searchParam = "";
 fetchTasks().then((response) => {
   renderTasks(response.data);
 });
@@ -343,6 +344,18 @@ export function renderTasks(tasksFromApi) {
   }
 }
 
+// search
+const searchInput = document.getElementById("search-input");
+searchInput.addEventListener("keyup", debounce(handleSearch, 1000));
+
+function handleSearch(e) {
+  searchParam = e.target.value;
+  fetchTasks(1, searchParam).then((response) => {
+    pagination();
+    renderTasks(response.data);
+  });
+}
+
 // dropDown Btn and pagination
 const chevron = document.getElementById("chevron-down");
 const select = document.getElementById("select");
@@ -369,15 +382,59 @@ options.forEach((option) => {
     select.classList.remove("select-clicked");
     chevron.classList.remove("rotate-180");
     menu.classList.add("hidden");
+
+    handlePerPage(event.target.innerText);
   });
 });
 
-// search
-const searchInput = document.getElementById("search-input");
-searchInput.addEventListener("keyup", debounce(handleSearch, 1000));
+function handlePerPage(option) {
+  perPage = +option;
+  fetchTasks(page, searchParam, perPage).then((response) => {
+    pagination();
+    renderTasks(response.data);
+  });
+}
 
-function handleSearch(e) {
-  fetchTasks(1, e.target.value).then((response) => {
+let totalPage;
+let totalItems;
+async function pagination() {
+  ({ totalItems, totalPage } = await fetchTasks(page, searchParam, perPage));
+
+  let startItem = (page - 1) * perPage + 1;
+  let endItem = Math.min(startItem + perPage - 1, totalItems);
+
+  const pageStartItem = document.getElementById("start-item");
+  pageStartItem.innerText = startItem < 0 ? 0 : startItem;
+
+  const pageEndItem = document.getElementById("end-item");
+  pageEndItem.innerText = endItem < 0 ? 0 : endItem;
+
+  const pageTotalItems = document.getElementById("total-items");
+  pageTotalItems.innerText = totalItems;
+}
+pagination();
+
+const nextPage = document.getElementById("next");
+nextPage.addEventListener("click", () => {
+  handleNextPage();
+});
+
+const prevPage = document.getElementById("prev");
+prevPage.addEventListener("click", () => {
+  handlePrevPage();
+});
+
+function handlePrevPage() {
+  if (page === 1) return;
+  fetchTasks(--page, searchParam, perPage).then((response) => {
+    pagination();
+    renderTasks(response.data);
+  });
+}
+function handleNextPage() {
+  if (page >= totalPage) return;
+  fetchTasks(++page, searchParam, perPage).then((response) => {
+    pagination();
     renderTasks(response.data);
   });
 }
