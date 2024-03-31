@@ -3,9 +3,14 @@ import axios from "axios";
 const BASE_URL = "http://localhost:5001";
 
 // Fetch tasks from the API
-export async function fetchTasks(page = 1, searchParam = "", perPage = 5) {
+export async function fetchTasks(
+  page = 1,
+  searchParam = "",
+  perPage = 5,
+  filter = ""
+) {
   const response = await axios.get(
-    `${BASE_URL}/tasks?_page=${page}&&taskName_like=${searchParam}&_limit=${perPage}`
+    `${BASE_URL}/tasks?_page=${page}&&taskName_like=${searchParam}&_limit=${perPage}${filter}`
   );
   return {
     data: response.data,

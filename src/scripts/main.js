@@ -21,6 +21,8 @@ let toEdit;
 let page = 1;
 let perPage = 5;
 let searchParam = "";
+let filterUrl = "";
+
 fetchTasks().then((response) => {
   renderTasks(response.data);
 });
@@ -389,7 +391,7 @@ options.forEach((option) => {
 
 function handlePerPage(option) {
   perPage = +option;
-  fetchTasks(page, searchParam, perPage).then((response) => {
+  fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
     pagination();
     renderTasks(response.data);
   });
@@ -398,16 +400,21 @@ function handlePerPage(option) {
 let totalPage;
 let totalItems;
 async function pagination() {
-  ({ totalItems, totalPage } = await fetchTasks(page, searchParam, perPage));
+  ({ totalItems, totalPage } = await fetchTasks(
+    page,
+    searchParam,
+    perPage,
+    filterUrl
+  ));
 
   let startItem = (page - 1) * perPage + 1;
   let endItem = Math.min(startItem + perPage - 1, totalItems);
 
   const pageStartItem = document.getElementById("start-item");
-  pageStartItem.innerText = startItem < 0 ? 0 : startItem;
+  pageStartItem.innerText = endItem == 0 ? 0 : startItem;
 
   const pageEndItem = document.getElementById("end-item");
-  pageEndItem.innerText = endItem < 0 ? 0 : endItem;
+  pageEndItem.innerText = endItem;
 
   const pageTotalItems = document.getElementById("total-items");
   pageTotalItems.innerText = totalItems;
@@ -426,14 +433,55 @@ prevPage.addEventListener("click", () => {
 
 function handlePrevPage() {
   if (page === 1) return;
-  fetchTasks(--page, searchParam, perPage).then((response) => {
+  fetchTasks(--page, searchParam, perPage, filterUrl).then((response) => {
     pagination();
     renderTasks(response.data);
   });
 }
 function handleNextPage() {
   if (page >= totalPage) return;
-  fetchTasks(++page, searchParam, perPage).then((response) => {
+  fetchTasks(++page, searchParam, perPage, filterUrl).then((response) => {
+    pagination();
+    renderTasks(response.data);
+  });
+}
+
+// filter
+const filterBtn = document.getElementById("filter");
+const filterModal = document.getElementById("filter-modal");
+
+filterBtn.addEventListener("click", () => {
+  openModal(filterModal);
+});
+
+filterModal.addEventListener("click", handleFilter);
+function handleFilter(e) {
+  const targetf = e.target;
+  if (targetf.dataset.close) {
+    closeModal(filterModal);
+    filterData();
+  }
+}
+
+function filterData() {
+  // get data
+  const priority = filterModal.querySelector('input[name="priority"]:checked');
+  const status = filterModal.querySelector('input[name="status"]:checked');
+  const deadline = filterModal.querySelector('input[name="deadline"]');
+
+  filterUrl = "";
+
+  if (priority) {
+    filterUrl += `&taskPriority=${priority.value}`;
+  }
+  if (status) {
+    filterUrl += `&taskStatus=${status.value}`;
+  }
+  if (deadline.value !== "") {
+    filterUrl += `&taskDeadline=${deadline.value}`;
+  }
+
+  fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
     pagination();
     renderTasks(response.data);
   });
