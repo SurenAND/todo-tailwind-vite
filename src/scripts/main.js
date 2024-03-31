@@ -23,7 +23,10 @@ let perPage = 5;
 let searchParam = "";
 let filterUrl = "";
 
+const loading = document.getElementById("loading");
+openModal(loading);
 fetchTasks().then((response) => {
+  closeModal(loading);
   renderTasks(response.data);
 });
 
@@ -71,7 +74,9 @@ function editRow(e, selectedRow = {}) {
     toEdit = idToEdit;
 
     // Fetch all tasks and find the task to be edited
+    openModal(loading);
     fetchTasks().then((response) => {
+      closeModal(loading);
       const tasks = response.data;
       const taskToEdit = tasks.find((task) => task.id === idToEdit);
       preFillInputs(taskToEdit);
@@ -88,7 +93,9 @@ function editRow(e, selectedRow = {}) {
     const desc = e.target.querySelector('textarea[name="description"]').value;
 
     // Fetch updated tasks, replace the specific task, and re-render the tasks
+    openModal(loading);
     fetchTasks().then((response) => {
+      closeModal(loading);
       const tasks = response.data;
       const taskToEdit = tasks.find((task) => task.id === toEdit);
 
@@ -103,7 +110,9 @@ function editRow(e, selectedRow = {}) {
       };
 
       editTaskApi(toEdit, newTask).then(() => {
+        openModal(loading);
         fetchTasks().then((response) => {
+          closeModal(loading);
           editActive = false;
           closeModal(modalBox);
           renderTasks(response.data);
@@ -138,7 +147,9 @@ function confirmAndDelete(e, selectedRow) {
     deleteTaskApi(idToDelete).then(() => {
       // Render tasks after adding the new task
       closeModal(deleteConfirmSec);
+      openModal(loading);
       fetchTasks().then((response) => {
+        closeModal(loading);
         renderTasks(response.data);
       });
     });
@@ -168,7 +179,9 @@ function viewRow(e, selectedRow) {
   const idToShow = +selectedRow.id;
 
   // Fetch all tasks and find the task to be viewed
+  openModal(loading);
   fetchTasks().then((response) => {
+    closeModal(loading);
     const tasks = response.data;
     const taskToView = tasks.find((task) => task.id === idToShow);
     changeViewModal(taskToView);
@@ -356,7 +369,9 @@ searchInput.addEventListener("keyup", debounce(handleSearch, 1000));
 
 function handleSearch(e) {
   searchParam = e.target.value;
+  openModal(loading);
   fetchTasks(1, searchParam).then((response) => {
+    closeModal(loading);
     pagination();
     renderTasks(response.data);
   });
@@ -395,7 +410,9 @@ options.forEach((option) => {
 
 function handlePerPage(option) {
   perPage = +option;
+  openModal(loading);
   fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
+    closeModal(loading);
     pagination();
     renderTasks(response.data);
   });
@@ -404,13 +421,14 @@ function handlePerPage(option) {
 let totalPage;
 let totalItems;
 async function pagination() {
+  openModal(loading);
   ({ totalItems, totalPage } = await fetchTasks(
     page,
     searchParam,
     perPage,
     filterUrl
   ));
-
+  closeModal(loading);
   let startItem = (page - 1) * perPage + 1;
   let endItem = Math.min(startItem + perPage - 1, totalItems);
 
@@ -437,14 +455,18 @@ prevPage.addEventListener("click", () => {
 
 function handlePrevPage() {
   if (page === 1) return;
+  openModal(loading);
   fetchTasks(--page, searchParam, perPage, filterUrl).then((response) => {
+    closeModal(loading);
     pagination();
     renderTasks(response.data);
   });
 }
 function handleNextPage() {
   if (page >= totalPage) return;
+  openModal(loading);
   fetchTasks(++page, searchParam, perPage, filterUrl).then((response) => {
+    closeModal(loading);
     pagination();
     renderTasks(response.data);
   });
@@ -484,8 +506,9 @@ function filterData() {
   if (deadline.value !== "") {
     filterUrl += `&taskDeadline=${deadline.value}`;
   }
-
+  openModal(loading);
   fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
+    closeModal(loading);
     pagination();
     renderTasks(response.data);
   });
