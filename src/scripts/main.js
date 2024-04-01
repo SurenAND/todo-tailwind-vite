@@ -2,6 +2,7 @@ import { debounce } from "lodash";
 import { deleteTaskApi, editTaskApi, fetchTasks } from "../library/axios";
 import {
   addToData,
+  clearInputs,
   handlePriorityBg,
   handlePriorityBorder,
   handlePriorityText,
@@ -477,6 +478,7 @@ function handleNextPage() {
 // filter
 const filterBtn = document.getElementById("filter");
 const filterModal = document.getElementById("filter-modal");
+const filterClear = document.getElementById("filter-clear");
 
 filterBtn.addEventListener("click", () => {
   openModal(filterModal);
@@ -516,3 +518,7 @@ function filterData() {
     renderTasks(response.data);
   });
 }
+
+filterClear.addEventListener("click", () => {
+  clearInputs(filterModal);
+});
