@@ -1,5 +1,5 @@
 import { addTaskApi, fetchTasks } from "../library/axios";
-import { renderTasks } from "./main";
+import { renderTasks, pagination } from "./main";
 
 export function clearInputs(form) {
   const inputs = form.querySelectorAll("input, textarea");
@@ -33,6 +33,7 @@ export function addToData(target) {
   addTaskApi(newTask).then(() => {
     // Render tasks after adding the new task
     fetchTasks().then((response) => {
+      pagination();
       renderTasks(response.data);
     });
   });

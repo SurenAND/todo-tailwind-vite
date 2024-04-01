@@ -12,6 +12,7 @@ import {
   preFillInputs,
 } from "./components";
 import { closeModal, openModal } from "./modalAction";
+import { El } from "../components/shared/el";
 
 // persian date picker
 jalaliDatepicker.startWatch();
@@ -65,10 +66,12 @@ addForm.addEventListener("submit", (e) => {
 });
 
 //Edit the selected row
-function editRow(e, selectedRow = {}) {
+function editRow(e, selectedRowId) {
   if (editActive === false) {
     e.preventDefault();
     isEdit = true;
+
+    const selectedRow = document.getElementById(`${selectedRowId}`);
 
     // get button id as index of the object that should edited
     const idToEdit = +selectedRow.id;
@@ -124,7 +127,7 @@ function editRow(e, selectedRow = {}) {
 }
 
 // delete row
-function confirmAndDelete(e, selectedRow) {
+function confirmAndDelete(e, selectedRowId) {
   e.preventDefault();
 
   const deleteConfirmSec = document.getElementById("delete-section");
@@ -141,6 +144,7 @@ function confirmAndDelete(e, selectedRow) {
   function handleDeleteClick() {
     closeModal(deleteConfirmSec);
     // remove the selected section
+    const selectedRow = document.getElementById(`${selectedRowId}`);
     selectedRow.remove();
 
     // get button id as index of the object that should removed
@@ -150,6 +154,7 @@ function confirmAndDelete(e, selectedRow) {
       closeModal(deleteConfirmSec);
       openModal(loading);
       fetchTasks().then((response) => {
+        pagination();
         closeModal(loading);
         renderTasks(response.data);
       });
@@ -172,9 +177,11 @@ function confirmAndDelete(e, selectedRow) {
 }
 
 // view selected row
-function viewRow(e, selectedRow) {
+function viewRow(e, selectedRowId) {
   e.preventDefault();
   const viewBox = document.getElementById("view-box");
+
+  const selectedRow = document.getElementById(`${selectedRowId}`);
 
   // get button id as index of the object that should show
   const idToShow = +selectedRow.id;
@@ -220,144 +227,137 @@ export function renderTasks(tasksFromApi) {
   if (tasksFromApi.length > 0) {
     notFound.classList.add("hidden");
     tasksFromApi.map((task) => {
-      const row = document.createElement("tr");
-      row.id = `${task.id}`;
-      row.classList.add("text-center", "border", "h-full", "w-full");
-
-      // taskName column
-      const taskNameCol = document.createElement("td");
-      taskNameCol.classList.add(
-        "text-start",
-        "border-l-2",
-        "border-b-2",
-        "py-4",
-        "pl-6"
-      );
-      taskNameCol.innerText = `${task.taskName}`;
-      row.append(taskNameCol);
-
-      // taskPriority column
-      const taskPriorityCol = document.createElement("td");
-      taskPriorityCol.classList.add("border-l-2", "border-b-2");
-      const prioritySpan = document.createElement("span");
-      prioritySpan.classList.add(
-        "select-none",
-        "rounded-3xl",
-        "border-2",
-        `${handlePriorityBorder(task.taskPriority)}`,
-        `${handlePriorityBg(task.taskPriority)}`,
-        `${handlePriorityText(task.taskPriority)}`,
-        "py-1",
-        "px-3",
-        "font-bold"
-      );
-      prioritySpan.innerText = `${task.taskPriority}`;
-      taskPriorityCol.append(prioritySpan);
-      row.append(taskPriorityCol);
-
-      // taskStatus column
-      const taskStatusCol = document.createElement("td");
-      taskStatusCol.classList.add("border-l-2", "border-b-2");
-      const statusSpan = document.createElement("span");
-      statusSpan.classList.add(
-        "select-none",
-        "rounded-3xl",
-        "border-2",
-        `${handleStatusBorder(task.taskStatus)}`,
-        `${handleStatusBg(task.taskStatus)}`,
-        `${handleStatusText(task.taskStatus)}`,
-        "py-1",
-        "px-3",
-        "font-bold"
-      );
-      statusSpan.innerText = `${task.taskStatus}`;
-      taskStatusCol.append(statusSpan);
-      row.append(taskStatusCol);
-
-      // taskDeadline column
-      const taskDeadlineCol = document.createElement("td");
-      taskDeadlineCol.classList.add("border-l-2", "border-b-2");
-      const deadlineSpan = document.createElement("span");
-      deadlineSpan.classList.add(
-        "select-none",
-        "rounded-3xl",
-        "border-2",
-        "border-blue-400",
-        "py-1",
-        "px-3"
-      );
-      deadlineSpan.innerText = `${task.taskDeadline}`;
-      taskDeadlineCol.append(deadlineSpan);
-      row.append(taskDeadlineCol);
-
-      // taskActions column
-      const taskActionsCol = document.createElement("td");
-      taskActionsCol.classList.add("border-l-2", "border-b-2");
-      const taskActionsSec = document.createElement("div");
-      taskActionsSec.classList.add(
-        "flex",
-        "flex-col",
-        "md:block",
-        "items-center",
-        "justify-center",
-        "p-2",
-        "gap-1"
-      );
-
-      // delete
-      const deleteTask = document.createElement("button");
-      deleteTask.classList.add("bg-red-600", "mx-1", "rounded", "text-center");
-      deleteTask.id = `${task.id}`;
-      const deleteIcon = document.createElement("img");
-      deleteIcon.src = "./src/assets/delete.svg";
-      deleteIcon.alt = "delete";
-      deleteIcon.classList.add("w-5", "my-1", "mx-2");
-      deleteTask.append(deleteIcon);
-      taskActionsSec.append(deleteTask);
-
-      // edit
-      const editTask = document.createElement("button");
-      editTask.classList.add("bg-blue-600", "mx-1", "rounded", "text-center");
-      editTask.id = `${task.id}`;
-      const editIcon = document.createElement("img");
-      editIcon.src = "./src/assets/edit.svg";
-      editIcon.alt = "edit";
-      editIcon.classList.add("w-5", "my-1", "mx-2");
-      editTask.append(editIcon);
-      taskActionsSec.append(editTask);
-
-      // view
-      const viewTask = document.createElement("button");
-      viewTask.classList.add("bg-gray-500", "mx-1", "rounded", "text-center");
-      viewTask.id = `${task.id}`;
-      const viewIcon = document.createElement("img");
-      viewIcon.src = "./src/assets/view.svg";
-      viewIcon.alt = "view";
-      viewIcon.classList.add("w-5", "my-1", "mx-2");
-      viewTask.append(viewIcon);
-      taskActionsSec.append(viewTask);
-
-      // append taskActionsSec
-      taskActionsCol.append(taskActionsSec);
-      row.append(taskActionsCol);
-
-      // append new row
-      tbody.append(row);
-
-      // delete
-      deleteTask.addEventListener("click", (e) => {
-        confirmAndDelete(e, row);
+      const tr = El({
+        element: "tr",
+        id: `${task.id}`,
+        className: "text-center border h-full w-full",
+        children: [
+          El({
+            element: "td",
+            className: "text-start border-l-2 border-b-2 py-4 pl-6",
+            innerText: `${task.taskName}`,
+          }),
+          El({
+            element: "td",
+            className: "border-l-2 border-b-2",
+            children: [
+              El({
+                element: "span",
+                className: `select-none rounded-3xl border-2 ${handlePriorityBorder(
+                  task.taskPriority
+                )} ${handlePriorityBg(task.taskPriority)} ${handlePriorityText(
+                  task.taskPriority
+                )} py-1 px-3 font-bold`,
+                innerText: `${task.taskPriority}`,
+              }),
+            ],
+          }),
+          El({
+            element: "td",
+            className: "border-l-2 border-b-2",
+            children: [
+              El({
+                element: "span",
+                className: `select-none rounded-3xl border-2 ${handleStatusBorder(
+                  task.taskStatus
+                )} ${handleStatusBg(task.taskStatus)} ${handleStatusText(
+                  task.taskStatus
+                )} py-1 px-3 font-bold`,
+                innerText: `${task.taskStatus}`,
+              }),
+            ],
+          }),
+          El({
+            element: "td",
+            className: "border-l-2 border-b-2",
+            children: [
+              El({
+                element: "span",
+                className:
+                  "select-none rounded-3xl border-2 border-blue-400 py-1 px-3",
+                innerText: `${task.taskDeadline}`,
+              }),
+            ],
+          }),
+          El({
+            element: "td",
+            className: "border-l-2 border-b-2",
+            children: [
+              El({
+                element: "div",
+                className:
+                  "flex flex-col md:block items-center justify-center p-2 gap-1",
+                children: [
+                  El({
+                    element: "button",
+                    className: "bg-red-600 mx-1 rounded text-center",
+                    id: `${task.id}`,
+                    children: [
+                      El({
+                        element: "img",
+                        className: "w-5 my-1 mx-2",
+                        src: "./src/assets/delete.svg",
+                        alt: "delete",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: (e) => {
+                              confirmAndDelete(e, task.id);
+                            },
+                          },
+                        ],
+                      }),
+                    ],
+                  }),
+                  El({
+                    element: "button",
+                    className: "bg-blue-600 mx-1 rounded text-center",
+                    id: `${task.id}`,
+                    children: [
+                      El({
+                        element: "img",
+                        className: "w-5 my-1 mx-2",
+                        src: "./src/assets/edit.svg",
+                        alt: "edit",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: (e) => {
+                              editRow(e, task.id);
+                            },
+                          },
+                        ],
+                      }),
+                    ],
+                  }),
+                  El({
+                    element: "button",
+                    className: "bg-gray-500 mx-1 rounded text-center",
+                    id: `${task.id}`,
+                    children: [
+                      El({
+                        element: "img",
+                        className: "w-5 my-1 mx-2",
+                        src: "./src/assets/view.svg",
+                        alt: "view",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: (e) => {
+                              viewRow(e, task.id);
+                            },
+                          },
+                        ],
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
       });
-
-      // edit
-      editTask.addEventListener("click", (e) => {
-        editRow(e, row);
-      });
-
-      // view
-      viewTask.addEventListener("click", (e) => {
-        viewRow(e, row);
-      });
+      tbody.append(tr);
     });
   } else if (showNotFound) {
     notFound.classList.remove("hidden");
@@ -423,7 +423,7 @@ function handlePerPage(option) {
 
 let totalPage;
 let totalItems;
-async function pagination() {
+export async function pagination() {
   openModal(loading);
   ({ totalItems, totalPage } = await fetchTasks(
     page,
