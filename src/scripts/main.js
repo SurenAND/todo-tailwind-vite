@@ -22,6 +22,7 @@ let page = 1;
 let perPage = 5;
 let searchParam = "";
 let filterUrl = "";
+let showNotFound = false;
 
 const loading = document.getElementById("loading");
 openModal(loading);
@@ -63,7 +64,6 @@ addForm.addEventListener("submit", (e) => {
 });
 
 //Edit the selected row
-let rowToEdit;
 function editRow(e, selectedRow = {}) {
   if (editActive === false) {
     e.preventDefault();
@@ -358,8 +358,9 @@ export function renderTasks(tasksFromApi) {
         viewRow(e, row);
       });
     });
-  } else {
+  } else if (showNotFound) {
     notFound.classList.remove("hidden");
+    showNotFound = false;
   }
 }
 
@@ -371,6 +372,7 @@ function handleSearch(e) {
   searchParam = e.target.value;
   openModal(loading);
   fetchTasks(1, searchParam).then((response) => {
+    showNotFound = true;
     closeModal(loading);
     pagination();
     renderTasks(response.data);
@@ -508,6 +510,7 @@ function filterData() {
   }
   openModal(loading);
   fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
+    showNotFound = true;
     closeModal(loading);
     pagination();
     renderTasks(response.data);
