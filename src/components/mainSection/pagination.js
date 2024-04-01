@@ -10,14 +10,14 @@ export const Pagination = () => {
         element: "div",
         className: "flex gap-12 items-center justify-center",
         children: [
-          // rows per page
+          // tasks per page
           El({
             element: "div",
             className: "flex gap-3 items-center justify-center",
             children: [
               El({
                 element: "span",
-                innerText: "Rows per page:",
+                innerText: "Tasks per page:",
               }),
               El({
                 element: "div",
@@ -33,7 +33,7 @@ export const Pagination = () => {
                       El({
                         element: "span",
                         id: "selected",
-                        innerText: "All",
+                        innerText: "5",
                       }),
                       El({
                         element: "img",
@@ -50,12 +50,6 @@ export const Pagination = () => {
                       "py-1 px-2 border border-solid border-purple-800 shadow-[0_0.5rem_1rem_border-purple-800] rounded-lg absolute top-10 w-24 z-10 hidden",
                     id: "menu",
                     children: [
-                      El({
-                        element: "li",
-                        className:
-                          "font-bold text-sm py-1 px-2 my-1 rounded-lg text-center cursor-pointer hover:bg-purple-400 hover:text-white",
-                        innerText: "All",
-                      }),
                       El({
                         element: "li",
                         className:
@@ -88,19 +82,19 @@ export const Pagination = () => {
               El({
                 element: "span",
                 className: "font-medium mx-1",
-                innerText: "1",
+                id: "start-item",
               }),
               "-",
               El({
                 element: "span",
                 className: "font-medium mx-1",
-                innerText: "10",
+                id: "end-item",
               }),
               "of",
               El({
                 element: "span",
                 className: "font-medium mx-1",
-                innerText: "100",
+                id: "total-items",
               }),
             ],
           }),

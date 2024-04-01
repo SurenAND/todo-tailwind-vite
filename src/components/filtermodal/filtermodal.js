@@ -1,4 +1,5 @@
 import { El } from "../shared/el";
+import { FilterClear } from "./clear";
 import { FilterDeadline } from "./deadline";
 import { FilterPriority } from "./priority";
 import { FilterStatus } from "./status";
@@ -33,7 +34,12 @@ export const FilterModal = () => {
           El({
             element: "div",
             className: "w-full flex flex-col gap-20",
-            children: [FilterPriority(), FilterStatus(), FilterDeadline()],
+            children: [
+              FilterPriority(),
+              FilterStatus(),
+              FilterDeadline(),
+              FilterClear(),
+            ],
           }),
         ],
       }),
