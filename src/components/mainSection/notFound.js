@@ -1,4 +1,4 @@
-import { El } from "../shared/el";
+import { El } from "../../utils";
 
 export const NotFound = () => {
   return El({

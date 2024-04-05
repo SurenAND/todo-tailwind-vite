@@ -1,6 +1,128 @@
-import { El } from "../shared/el";
+import { fetchTasks } from "../../api/axios";
+import {
+  closeModal,
+  getTotalPage,
+  openModal,
+  pagination,
+  renderTasks,
+} from "../../utils";
+import { El } from "../../utils";
 
 export const Pagination = () => {
+  //
+  window.addEventListener("mouseup", function (event) {
+    const chevron = document.getElementById("chevron-down");
+    const menu = document.getElementById("menu");
+    const select = document.getElementById("select");
+    if (select && event.target != select && event.target.parentNode != select) {
+      select.classList.remove("select-clicked");
+      chevron.classList.remove("rotate-180");
+      menu.classList.add("hidden");
+    }
+  });
+
+  function handlePerPage(event) {
+    let option = event.target.innerText;
+    const chevron = document.getElementById("chevron-down");
+    const menu = document.getElementById("menu");
+    const select = document.getElementById("select");
+    const selected = document.getElementById("selected");
+    const loading = document.getElementById("loading");
+
+    selected.textContent = option;
+    select.classList.remove("select-clicked");
+    chevron.classList.remove("rotate-180");
+    menu.classList.add("hidden");
+
+    let perPage = localStorage.getItem("perPage")
+      ? JSON.parse(localStorage.getItem("perPage"))
+      : "";
+
+    let page = localStorage.getItem("page")
+      ? JSON.parse(localStorage.getItem("page"))
+      : "";
+
+    let searchParam = localStorage.getItem("searchParam")
+      ? JSON.parse(localStorage.getItem("searchParam"))
+      : "";
+
+    let filterUrl = localStorage.getItem("filterUrl")
+      ? JSON.parse(localStorage.getItem("filterUrl"))
+      : "";
+
+    perPage = +option;
+    localStorage.setItem("perPage", JSON.stringify(perPage));
+    openModal(loading);
+    fetchTasks(page, searchParam, perPage, filterUrl).then((response) => {
+      closeModal(loading);
+      pagination();
+      renderTasks(response.data);
+    });
+  }
+
+  function handlePrevPage() {
+    const loading = document.getElementById("loading");
+
+    let perPage = localStorage.getItem("perPage")
+      ? JSON.parse(localStorage.getItem("perPage"))
+      : "";
+
+    let page = localStorage.getItem("page")
+      ? JSON.parse(localStorage.getItem("page"))
+      : "";
+
+    let searchParam = localStorage.getItem("searchParam")
+      ? JSON.parse(localStorage.getItem("searchParam"))
+      : "";
+
+    let filterUrl = localStorage.getItem("filterUrl")
+      ? JSON.parse(localStorage.getItem("filterUrl"))
+      : "";
+
+    if (page === 1) return;
+    openModal(loading);
+    fetchTasks(--page, searchParam, perPage, filterUrl).then((response) => {
+      closeModal(loading);
+      pagination();
+      renderTasks(response.data);
+    });
+  }
+
+  function handleNextPage() {
+    const loading = document.getElementById("loading");
+
+    let perPage = localStorage.getItem("perPage")
+      ? JSON.parse(localStorage.getItem("perPage"))
+      : "";
+
+    let page = localStorage.getItem("page")
+      ? JSON.parse(localStorage.getItem("page"))
+      : "";
+
+    let searchParam = localStorage.getItem("searchParam")
+      ? JSON.parse(localStorage.getItem("searchParam"))
+      : "";
+
+    let filterUrl = localStorage.getItem("filterUrl")
+      ? JSON.parse(localStorage.getItem("filterUrl"))
+      : "";
+    let totalPage = getTotalPage(page, searchParam, perPage, filterUrl);
+    if (page >= totalPage) return;
+    openModal(loading);
+    fetchTasks(++page, searchParam, perPage, filterUrl).then((response) => {
+      closeModal(loading);
+      pagination();
+      renderTasks(response.data);
+    });
+  }
+
+  function handleDropDown() {
+    const chevron = document.getElementById("chevron-down");
+    const menu = document.getElementById("menu");
+    chevron.classList.toggle("rotate-180");
+    menu.classList.toggle("hidden");
+  }
+
   return El({
     element: "div",
     className: "w-full flex justify-end p-3 select-none",
@@ -29,6 +151,12 @@ export const Pagination = () => {
                     className:
                       "w-16 p-2 font-bold text-sm flex justify-around cursor-pointer",
                     id: "select",
+                    eventListener: [
+                      {
+                        event: "click",
+                        callback: handleDropDown,
+                      },
+                    ],
                     children: [
                       El({
                         element: "span",
@@ -55,18 +183,36 @@ export const Pagination = () => {
                         className:
                           "font-bold text-sm py-1 px-2 my-1 rounded-lg text-center cursor-pointer hover:bg-purple-400 hover:text-white",
                         innerText: "5",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: handlePerPage,
+                          },
+                        ],
                       }),
                       El({
                         element: "li",
                         className:
                           "font-bold text-sm py-1 px-2 my-1 rounded-lg text-center cursor-pointer hover:bg-purple-400 hover:text-white",
                         innerText: "10",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: handlePerPage,
+                          },
+                        ],
                       }),
                       El({
                         element: "li",
                         className:
                           "font-bold text-sm py-1 px-2 my-1 rounded-lg text-center cursor-pointer hover:bg-purple-400 hover:text-white",
                         innerText: "15",
+                        eventListener: [
+                          {
+                            event: "click",
+                            callback: handlePerPage,
+                          },
+                        ],
                       }),
                     ],
                   }),
@@ -109,6 +255,12 @@ export const Pagination = () => {
                 id: "prev",
                 src: "./src/assets/chevron-l.svg",
                 alt: "chevron-l",
+                eventListener: [
+                  {
+                    event: "click",
+                    callback: handlePrevPage,
+                  },
+                ],
               }),
               El({
                 element: "img",
@@ -116,6 +268,12 @@ export const Pagination = () => {
                 id: "next",
                 src: "./src/assets/chevron-r.svg",
                 alt: "chevron-r",
+                eventListener: [
+                  {
+                    event: "click",
+                    callback: handleNextPage,
+                  },
+                ],
               }),
             ],
           }),

@@ -1,12 +1,24 @@
-import { El } from "../shared/el";
+import { El } from "../../utils";
+import { closeModal } from "../../utils";
 import { Form } from "./form";
 
 export const AddModal = () => {
+  function handleClose(e) {
+    const modalBox = document.getElementById("modal-box");
+    e.target.dataset.close ? closeModal(modalBox) : null;
+  }
+
   return El({
     element: "div",
     className:
       "absolute inset-0 backdrop-blur-sm bg-slate-300 bg-opacity-30 flex items-center justify-center z-20 invisible",
     id: "modal-box",
+    eventListener: [
+      {
+        event: "click",
+        callback: handleClose,
+      },
+    ],
     dataset: {
       close: "close",
     },

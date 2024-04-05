@@ -1,4 +1,4 @@
-import { El } from "../shared/el";
+import { El } from "../../utils";
 import { ViewDeadline } from "./deadline";
 import { ViewDescription } from "./description";
 import { ViewPriority } from "./priority";

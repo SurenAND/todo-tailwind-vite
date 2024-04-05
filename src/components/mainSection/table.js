@@ -1,6 +1,17 @@
-import { El } from "../shared/el";
+import { El } from "../../utils";
+import { fetchTasks } from "../../api/axios";
+import { closeModal, openModal, renderTasks } from "../../utils";
 
 export const Table = () => {
+  const loading = document.getElementById("loading");
+
+  // First fetch and loading
+  openModal(loading);
+  fetchTasks().then((response) => {
+    closeModal(loading);
+    renderTasks(response.data);
+  });
+
   return El({
     element: "table",
     className: "w-full border-2 overflow-x-auto",

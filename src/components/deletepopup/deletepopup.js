@@ -1,4 +1,4 @@
-import { El } from "../shared/el";
+import { El } from "../../utils";
 import { DeleteBody } from "./body";
 import { DeleteFooter } from "./footer";
 import { DeleteHeader } from "./header";
